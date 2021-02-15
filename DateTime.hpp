@@ -1,24 +1,19 @@
-#ifndef DateTimeCf_h
-#define DateTimeCf_h
+#pragma once
 
 #include <Arduino.h>
 
 #include <NTPClient.h>
 #include <TimeLib.h>
 #include <WiFi.h>
+#include <DeviceStatus.hpp>
 
-class DateTime
-{
-  private:    
-    WiFiUDP udp;
-    NTPClient* ntp;
 
-  public:
-    DateTime();
-    void begin();
-    void update();
+namespace DateTime
+{   
+    void setup();
+    void updateNTP();
+
     String getFormattedTime();
-
     char* getHour(const char *format);
     char* getMinute(const char *format);
     char* getSecond(const char *format);
@@ -29,6 +24,4 @@ class DateTime
     int getWeekday();
     int getDay();
     int getMonth();
-
-};
-#endif
+}
