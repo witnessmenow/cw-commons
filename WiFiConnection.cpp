@@ -5,26 +5,32 @@ namespace WiFiConnection
     const char* ssid = "NET_2GB7BCBA";
     const char* password =  "4AB7BCBA";
 
-    void connect() 
+
+    void setup() 
     {
-        delay(1000);
+        connect();
+    }
+
+    void connect() 
+    {     
         WiFi.mode(WIFI_MODE_STA);
         WiFi.disconnect();
 
         WiFi.begin(ssid, password);
         
+        Serial.print("Connecting");
         while (WiFi.status() != WL_CONNECTED)
         {
             delay(500);
-            //Display::print(".");
+            Serial.print(".");
         }
         
-        DeviceStatus::reportStatus(DeviceStatus::Level::INFO, DeviceStatus::Module::M_WIFI, "Connected");
+        //DeviceStatus::reportStatus(DeviceStatus::Level::INFO, DeviceStatus::Module::M_WIFI, "OK");
                        
-        // Serial.print("Connected to ");
-        // Serial.println(ssid);
-        // Serial.print("IP address: ");
-        // Serial.println(WiFi.localIP());
+        Serial.print("Connected to ");
+        Serial.println(ssid);
+        Serial.print("IP address: ");
+        Serial.println(WiFi.localIP());
     }
 
     boolean isConnected() 

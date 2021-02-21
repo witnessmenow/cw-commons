@@ -22,11 +22,14 @@ namespace DeviceStatus
         M_DISPLAY,
         M_WIFI,
         M_NTP,
+        M_OTA,
         M_CLOCKFACE
     };
 
-    void setStatus(State state);
-    void reportStatus(Level level, Module module, const char* message);
     void setup();
     void loop();
-}
+    State getCurrentState();
+    void setState(State state);
+    void reportStatus(Level level, Module module, const char* message);
+    
+};

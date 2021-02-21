@@ -6,6 +6,7 @@
 
 namespace WiFiConnection
 {   
+    void setup();
     void connect();
     boolean isConnected();
 }

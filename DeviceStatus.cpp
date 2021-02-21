@@ -2,6 +2,7 @@
 
 namespace DeviceStatus 
 {
+
     const uint8_t PIN_LED_STATUS = 2;
     bool ledState = false;
     unsigned long lastMillis = 0;
@@ -11,27 +12,34 @@ namespace DeviceStatus
     void blink(int interval);
 
 
-    void setStatus(State state) 
+    void setState(State state) 
     {
         gState = state;
+    }
+
+    State getCurrentState() 
+    {
+        return gState;
     }
     
     void reportStatus(Level level, Module module, const char* message)
     {
         if (level != Level::ERROR) {
             
-            if (module == Module::M_WIFI) 
-            {
-                Display::print("[WiFi] ");    
+            if (module == Module::M_WIFI) {
+                
             } else if (module == Module::M_DISPLAY) {
-                Display::print("[DISPLAY] ");    
+                Display::print("[LEDM] ");    
             } else if (module == Module::M_NTP) {
                 Display::print("[NTP] ");    
+            } else if (module == Module::M_OTA) {
+                Display::print("[OTA] ");    
             }
 
             Display::println(message);
         }
     }
+
     
     void setup() 
     {
