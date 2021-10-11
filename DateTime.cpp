@@ -1,75 +1,83 @@
 
 #include "DateTime.h"
 
-const char* weekDayWords[] = {"DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"};
+//const char* weekDayWords[] = {"DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"};
+const char *weekDayWords[] = {"MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"};
 
-
-DateTime::DateTime() {
-  this->ntp = new NTPClient(udp, "a.st1.ntp.br", -3 * 3600, 3600000);
-  setTime(ntp->getEpochTime());
+DateTime::DateTime()
+{
 }
 
-void DateTime::begin()
+void DateTime::begin(const char *timeZone)
 {
-  ntp->begin();
-  ntp->forceUpdate();
+  myTZ.setLocation(timeZone);
+  waitForSync();
 }
 
 void DateTime::update()
 {
-  ntp->update();
 }
 
 String DateTime::getFormattedTime()
 {
-  return ntp->getFormattedTime();
+  return myTZ.dateTime();
 }
 
-char* DateTime::getHour(const char *format)
+char *DateTime::getHour(const char *format)
 {
   static char buffer[3] = {'\0'};
-  snprintf(buffer, sizeof(buffer), format, ntp->getHours());
+  snprintf(buffer, sizeof(buffer), format, myTZ.dateTime("H"));
   return buffer;
 }
 
-char* DateTime::getMinute(const char *format)
+char *DateTime::getMinute(const char *format)
 {
   static char buffer[3] = {'\0'};
-  snprintf(buffer, sizeof(buffer), format, ntp->getMinutes());
+  //Serial.println(myTZ.dateTime("i").c_str()); // Is correct
+  //snprintf(buffer, sizeof(buffer), format, myTZ.dateTime("i").c_str());
+  //Serial.println(buffer); //Always returns 10!?
+  strncpy(buffer, myTZ.dateTime("i").c_str(), sizeof(buffer));
   return buffer;
 }
 
-char* DateTime::getSecond(const char *format)
+char *DateTime::getSecond(const char *format)
 {
   static char buffer[3] = {'\0'};
-  snprintf(buffer, sizeof(buffer), format, ntp->getSeconds());
+  snprintf(buffer, sizeof(buffer), format, myTZ.dateTime("s"));
   return buffer;
 }
 
-const char* DateTime::getWeekdayName() {
-  return weekDayWords[weekday(ntp->getEpochTime())-1];
+const char *DateTime::getWeekdayName()
+{
+  return weekDayWords[myTZ.dateTime("N").toInt() - 1];
 }
 
-int DateTime::getHour() {
-  return ntp->getHours();
+int DateTime::getHour()
+{
+  return myTZ.dateTime("H").toInt();
 }
 
-int DateTime::getMinute() {
-  return ntp->getMinutes();
+int DateTime::getMinute()
+{
+  return myTZ.dateTime("i").toInt();
 }
 
-int DateTime::getSecond() {
-  return ntp->getSeconds();
+int DateTime::getSecond()
+{
+  return myTZ.dateTime("s").toInt();
 }
 
-int DateTime::getWeekday() {
-  return weekday(ntp->getEpochTime())-1;
+int DateTime::getWeekday()
+{
+  return myTZ.dateTime("N").toInt() - 1;
 }
 
-int DateTime::getDay() {  
-  return day(ntp->getEpochTime());
+int DateTime::getDay()
+{
+  return myTZ.dateTime("j").toInt();
 }
 
-int DateTime::getMonth() {
-  return month(ntp->getEpochTime());
+int DateTime::getMonth()
+{
+  return myTZ.dateTime("n").toInt();
 }
